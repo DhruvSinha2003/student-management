@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import "./AddStudent.css"; // Import CSS file for styling
 
 export default function AddStudent() {
   const [name, setName] = useState("");
@@ -46,7 +47,7 @@ export default function AddStudent() {
 
   return (
     <div className="container p-5">
-      <form onSubmit={sendData}>
+      <form onSubmit={sendData} className="add-student-form">
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Student Name
@@ -62,13 +63,13 @@ export default function AddStudent() {
         </div>
         <div className="mb-3">
           <label htmlFor="nim" className="form-label">
-            Student Nim
+            Student Number
           </label>
           <input
             type="number"
             className="form-control"
             id="nim"
-            placeholder="Enter Your Nim"
+            placeholder="Enter Your Number"
             value={nim}
             onChange={(e) => setNim(e.target.value)}
           />
@@ -76,7 +77,7 @@ export default function AddStudent() {
         <div>
           <label htmlFor="gender">Select Your Gender</label>
           <br />
-          <div>
+          <div className="gender-options">
             <div className="form-check form-check-inline">
               <input
                 className="form-check-input"

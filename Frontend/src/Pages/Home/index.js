@@ -6,7 +6,6 @@ import { FaRegEdit } from 'react-icons/fa'
 import { BsTrash3 } from 'react-icons/bs'
 import NoStudent from "../../Components/NoStudent";
 
-
 export default function Home() {
   const [students, setStudents] = useState([]);
 
@@ -37,7 +36,6 @@ export default function Home() {
           .delete(`http://localhost:8070/student/delete/${id}`)
           .then((res) => {
             Swal.fire("Deleted!", res.data.status, "success");
-            //update table after deleting
             const updatedStudents = students.filter(
               (student) => student._id !== id
             );
@@ -52,44 +50,41 @@ export default function Home() {
 
   return (
     <div className="text-center mb-4">
-      <h5 style={{ textAlign: "center", padding: "3rem" }}>Students Attendance Sekolah Tinggi Teknologi Informatika Sony Sugema</h5>
-      <Link to="/add-student">
-        <div className="col-4">
-          <button className="btn btn-primary" type="submit">
-            Add Student
-          </button>
-        </div>
-      </Link > 
+      <h2 className="mb-4" style={{ padding: "1rem" }}>Students</h2>
+      <Link to="/add-student" style={{ textDecoration: 'none' }}>
+        <button className="btn btn-primary mb-4" type="submit">
+          Add Student
+        </button>
+      </Link>
       <div className="container">
         {students.length > 0 ? (
-          <table className="table ">
+          <table className="table table-striped table-bordered">
             <thead>
               <tr>
-                <th scope="col"></th>
-                <th scope="col">Name</th>
-                <th scope="col">Nim</th>
-                <th scope="col">Gender</th>
-                <th scope="col">Action</th>
+                <th style={{ width: '5%' }}>Sr. No</th> {/* Adjusted width here */}
+                <th>Name</th>
+                <th>Number</th>
+                <th>Gender</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
               {students.map((item, index) => (
                 <tr key={item._id}>
-                  <td style={{ color: "red" }}>{index + 1}</td>
+                  <td>{index + 1}</td>
                   <td>{item.name}</td>
                   <td>{item.nim}</td>
                   <td>{item.gender}</td>
                   <td>
-                    <Link to={`/get/${item._id}`} className="btn btn-primary">
-                      <FaRegEdit className="d-flex align-items-center justify-content-center" />
+                    <Link to={`/get/${item._id}`} className="btn btn-primary mr-2">
+                      <FaRegEdit />
                     </Link>
-                    {" "}
                     <button
                       type="button"
                       className="btn btn-danger"
                       onClick={() => deleteUser(item._id)}
                     >
-                      <BsTrash3 className="d-flex align-items-center justify-content-center" />
+                      <BsTrash3 />
                     </button>
                   </td>
                 </tr>
