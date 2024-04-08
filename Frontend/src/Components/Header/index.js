@@ -1,19 +1,19 @@
 import React from "react";
-/* import logo from "../../Assets/LogoSttiss.png"; */
+import logo from "../../Assets/mmcoe.png";
 
 function Header() {
   return (
     <div>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
-          {/* <a className="nav-link" href="/">
+          <a className="nav-link" href="/">
             <img
               className="img-fluid"
               src={logo}
               alt="Logo STTISS"
               style={{ width: "3rem" }}
             />
-          </a> */}
+          </a>
 
           <button
             className="navbar-toggler"

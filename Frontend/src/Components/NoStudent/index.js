@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../Assets/LogoSttiss.png";
+/* import logo from "../../Assets/LogoSttiss.png"; */
 import './NoStudent.css';
 
 const NoStudent = () => (
@@ -8,12 +8,12 @@ const NoStudent = () => (
         <p>
             Add Student Attendance
         </p>
-        <img
+        {/* <img
             className="img-fluid bounce-animation "
             src={logo}
             alt="Logo STTISS"
             style={{ width: "15rem", padding: "2rem" }}
-        />
+        /> */}
     </div>
 );
 
