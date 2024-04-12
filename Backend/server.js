@@ -17,10 +17,14 @@ mongoose.connect(process.env.MONGODB_URL, {
   useUnifiedTopology: true,
 });
 
-const connection = mongoose.connection;
-connection.once('open', () => {
-  console.log('MongoDB Connection Success!');
-});
+mongoose.connect(process.env.MONGODB_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true
+})
+  .then(() => console.log('MongoDB Connection Success!'))
+  .catch((err) => console.error('MongoDB Connection Error:', err));
 
 // Import and use the student routes
 const studentRoute = require('./routes/students_route');

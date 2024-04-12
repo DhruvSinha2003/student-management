@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import "./AddStudent.css"; // Import CSS file for styling
+import "./AddStudent.css";
 
 export default function AddStudent() {
   const [name, setName] = useState("");
   const [nim, setNim] = useState("");
   const [gender, setGender] = useState("");
+  const [semester, setSemester] = useState(1);
   const navigate = useNavigate();
 
   const sendData = (e) => {
@@ -16,6 +17,7 @@ export default function AddStudent() {
       name,
       nim: parseInt(nim),
       gender,
+      semester,
     };
 
     Swal.fire({
@@ -29,7 +31,7 @@ export default function AddStudent() {
         axios
           .post("http://localhost:8070/student/add", newStudent)
           .then(() => {
-            Swal.fire("Student has been successfully Saved!", "", "success");
+            Swal.fire("Student and GPA record have been successfully saved!", "", "success");
             navigate("/");
           })
           .catch((err) => {
@@ -107,6 +109,19 @@ export default function AddStudent() {
               </label>
             </div>
           </div>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="semester" className="form-label">
+            Current Semester
+          </label>
+          <input
+            type="number"
+            className="form-control"
+            id="semester"
+            placeholder="Enter Your Current Semester"
+            value={semester}
+            onChange={(e) => setSemester(parseInt(e.target.value))}
+          />
         </div>
         <br />
         <div className="col-12">
