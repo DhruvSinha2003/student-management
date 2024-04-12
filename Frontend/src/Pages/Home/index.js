@@ -2,21 +2,25 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
-import { FaRegEdit } from 'react-icons/fa'
-import { BsTrash3 } from 'react-icons/bs'
+import { FaRegEdit } from "react-icons/fa";
+import { BsTrash3, BsGraphUp } from "react-icons/bs";
 import NoStudent from "../../Components/NoStudent";
 
 export default function Home() {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    const getStudents = () => {
-      axios
-        .get("http://localhost:8070/student/get")
-        .then((res) => {
-          setStudents(res.data);
-        })
-        .catch((err) => alert(err.message));
+    const getStudents = async () => {
+      try {
+        const res = await axios.get("http://localhost:8070/student/get-all");
+        setStudents(res.data);
+      } catch (err) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: err.message,
+        });
+      }
     };
     getStudents();
   }, []);
@@ -36,9 +40,7 @@ export default function Home() {
           .delete(`http://localhost:8070/student/delete/${id}`)
           .then((res) => {
             Swal.fire("Deleted!", res.data.status, "success");
-            const updatedStudents = students.filter(
-              (student) => student._id !== id
-            );
+            const updatedStudents = students.filter((student) => student._id !== id);
             setStudents(updatedStudents);
           })
           .catch((err) => {
@@ -50,8 +52,10 @@ export default function Home() {
 
   return (
     <div className="text-center mb-4">
-      <h2 className="mb-4" style={{ padding: "1rem" }}>Students</h2>
-      <Link to="/add-student" style={{ textDecoration: 'none' }}>
+      <h2 className="mb-4" style={{ padding: "1rem" }}>
+        Students
+      </h2>
+      <Link to="/add-student" style={{ textDecoration: "none" }}>
         <button className="btn btn-primary mb-4" type="submit">
           Add Student
         </button>
@@ -61,10 +65,11 @@ export default function Home() {
           <table className="table table-striped table-bordered">
             <thead>
               <tr>
-                <th style={{ width: '5%' }}>Sr. No</th> {/* Adjusted width here */}
+                <th style={{ width: "5%" }}>Sr. No</th>
                 <th>Name</th>
                 <th>Number</th>
                 <th>Gender</th>
+                <th>Semester</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -75,9 +80,13 @@ export default function Home() {
                   <td>{item.name}</td>
                   <td>{item.nim}</td>
                   <td>{item.gender}</td>
+                  <td>{item.semester}</td>
                   <td>
                     <Link to={`/get/${item._id}`} className="btn btn-primary mr-2">
                       <FaRegEdit />
+                    </Link>
+                    <Link to={`/gpa/${item._id}`} className="btn btn-success mr-2">
+                      <BsGraphUp />
                     </Link>
                     <button
                       type="button"

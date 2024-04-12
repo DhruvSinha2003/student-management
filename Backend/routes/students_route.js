@@ -41,6 +41,16 @@ router.route('/get').get((req, res) => {
     });
 });
 
+router.route('/get-all').get(async (req, res) => {
+  try {
+    const students = await Student.find().populate('gpa');
+    res.status(200).json(students);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send({ status: 'Error with fetching students', error: err.message });
+  }
+});
+
 // Update a student
 router.route('/update/:sid').put(async (req, res) => {
   const userID = req.params.sid;
@@ -83,21 +93,23 @@ router.route('/get/:sid').get(async (req, res) => {
 });
 
 // Add a new GPA record for a student
+// Add a new GPA record for a student
 router.route('/student/:sid/gpa/add').post(async (req, res) => {
   const studentId = req.params.sid;
   const { semester, gpa } = req.body;
 
   try {
     const newGPA = new GPA({
+      student: studentId,
       semester,
       gpa
     });
 
     await newGPA.save();
 
-    // Update the student's GPA array
+    // Update the student's GPA reference
     const student = await Student.findById(studentId);
-    student.gpa.push(newGPA._id);
+    student.gpa = newGPA._id;
     await student.save();
 
     res.status(201).json({ message: 'GPA record added successfully' });
@@ -119,6 +131,19 @@ router.route('/student/:sid/gpa/get').get(async (req, res) => {
     res.status(500).send({ status: 'Error with fetching GPA records', error: err.message });
   }
 });
+
+router.route('/gpa/:sid').get(async (req, res) => {
+  const studentId = req.params.sid;
+
+  try {
+    const student = await Student.findById(studentId).populate('gpa');
+    res.status(200).json(student);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send({ status: 'Error with fetching student and GPA', error: err.message });
+  }
+});
+
 
 // Update a GPA record for a student
 router.route('/student/:sid/gpa/:gpaid/update').put(async (req, res) => {
