@@ -93,33 +93,91 @@ router.route('/get/:sid').get(async (req, res) => {
 });
 
 // Add a new GPA record for a student
+// Add a new GPA record for a student
 router.route('/student/:sid/gpa/add').post(async (req, res) => {
   const studentId = req.params.sid;
-  const { semester, gpa } = req.body;
+  const gpaData = req.body; // Array of GPA data for all semesters
 
   try {
-    const newGPA = new GPA({
-      student: studentId,
-      semester,
-      gpa
+    // Fetch the student by ID
+    const student = await Student.findById(studentId);
+
+    // If the student doesn't exist, return an error
+    if (!student) {
+      return res.status(404).json({ status: 'Error', message: 'Student not found' });
+    }
+
+    // Iterate over the array of GPA data and save each GPA record
+    const promises = gpaData.map(async (data) => {
+      const { semester, gpa } = data;
+
+      const newGPA = new GPA({
+        student: student._id, // Use the student's _id
+        semester,
+        gpa
+      });
+
+      await newGPA.save();
     });
 
-    await newGPA.save();
+    // Wait for all GPA records to be saved
+    await Promise.all(promises);
 
-    // Update the student's GPA reference
-    const student = await Student.findById(studentId);
-    student.gpa = newGPA._id;
-    await student.save();
+    // Update the student's GPA reference if necessary
+    if (!student.gpa || student.gpa.length === 0) {
+      student.gpa = gpaData.map(data => data._id); // Assuming each GPA record has a unique _id
+      await student.save();
+    }
 
-    res.status(201).json({ message: 'GPA record added successfully' });
+    res.status(201).json({ message: 'GPA records added successfully' });
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ status: 'Error with adding GPA record', error: err.message });
+    res.status(500).send({ status: 'Error with adding GPA records', error: err.message });
   }
 });
 
-// Get all GPA records for a student
-router.route('/student/:sid/gpa/get').get(async (req, res) => {
+
+router.route('/student/gpa/:gpaid/add').post(async (req, res) => {
+  const gpaId = req.params.gpaid; // Get the GPA ID from the request parameters
+  const gpaData = req.body;
+
+  try {
+    const gpa = await GPA.findById(gpaId); // Find the GPA record using the GPA ID
+
+    if (!gpa) {
+      return res.status(404).json({ status: 'Error', message: 'GPA record not found' });
+    }
+
+    const promises = gpaData.map(async (data) => {
+      const { semester, gpa } = data;
+
+      const newGPA = new GPA({
+        student: gpa.student, // Associate the GPA record with the student using the student ID from the GPA record
+        semester,
+        gpa
+      });
+
+      await newGPA.save();
+    });
+
+    await Promise.all(promises);
+
+    // Update the GPA record if necessary
+    if (!gpa.student.gpa || gpa.student.gpa.length === 0) {
+      gpa.student.gpa = gpaData.map(data => data._id);
+      await gpa.student.save();
+    }
+
+    res.status(201).json({ message: 'GPA records added successfully' });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send({ status: 'Error with adding GPA records', error: err.message });
+  }
+});
+
+
+// Get all GPA records for a specific student
+router.route('/:sid/gpa/get').get(async (req, res) => {
   const studentId = req.params.sid;
 
   try {
