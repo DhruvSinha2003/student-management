@@ -8,7 +8,6 @@ import Footer from "./Components/Footer";
 import NotFound from "./Components/NotFound";
 import GPA from './Pages/GPA';
 
-
 function App() {
   return (
     <div>
@@ -16,11 +15,11 @@ function App() {
 
       <Router>
         <Routes>
-          <Route path="/" exact Component={Home} />
-          <Route path="*" exact Component={NotFound} />
-          <Route path="/add-student" exact Component={AddStudent} />
-          <Route path="/get/:id" exact Component={ShowOne} />
-          <Route path="/gpa/:sid" element={<GPA />} />
+          <Route path="/" exact element={<Home />} />
+          <Route path="*" element={<NotFound />} />
+          <Route path="/add-student" element={<AddStudent />} />
+          <Route path="/get/:id" element={<ShowOne />} />
+          <Route path="/student/gpa/:sid" element={<GPA />} />
         </Routes>
       </Router>
 

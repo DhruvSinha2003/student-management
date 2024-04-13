@@ -93,7 +93,6 @@ router.route('/get/:sid').get(async (req, res) => {
 });
 
 // Add a new GPA record for a student
-// Add a new GPA record for a student
 router.route('/student/:sid/gpa/add').post(async (req, res) => {
   const studentId = req.params.sid;
   const { semester, gpa } = req.body;
@@ -137,7 +136,7 @@ router.route('/gpa/:sid').get(async (req, res) => {
 
   try {
     const student = await Student.findById(studentId).populate('gpa');
-    res.status(200).json(student);
+    res.status(200).json({ student, gpa: student.gpa });
   } catch (err) {
     console.log(err.message);
     res.status(500).send({ status: 'Error with fetching student and GPA', error: err.message });

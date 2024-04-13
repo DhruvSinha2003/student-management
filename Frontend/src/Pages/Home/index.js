@@ -85,7 +85,7 @@ export default function Home() {
                     <Link to={`/get/${item._id}`} className="btn btn-primary mr-2">
                       <FaRegEdit />
                     </Link>
-                    <Link to={`/gpa/${item._id}`} className="btn btn-success mr-2">
+                    <Link to={`/student/gpa/${item._id}`} className="btn btn-success mr-2">
                       <BsGraphUp />
                     </Link>
                     <button

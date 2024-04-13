@@ -12,9 +12,10 @@ export default function GPA() {
   useEffect(() => {
     const fetchStudentAndGpa = async () => {
       try {
-        const response = await axios.get(`http://localhost:8070/student/gpa/${sid}`);
-        setStudent(response.data);
-        setGpa(response.data.gpa);
+        const response = await axios.get(`http://localhost:8070/student/get/${sid}`); // Fetch student details using sid
+        setStudent(response.data.user); // Assuming the user object contains the student details
+        const gpaResponse = await axios.get(`http://localhost:8070/student/${sid}/gpa/get`); // Fetch GPA records using sid
+        setGpa(gpaResponse.data); // Assuming the response contains an array of GPA records
       } catch (err) {
         Swal.fire({
           icon: "error",
@@ -23,7 +24,6 @@ export default function GPA() {
         });
       }
     };
-  
     fetchStudentAndGpa();
   }, [sid]);
 
@@ -31,14 +31,16 @@ export default function GPA() {
     try {
       for (let i = 0; i < student.semester; i++) {
         const gpaValue = parseFloat(document.getElementById(`gpa-${i + 1}`).value);
-        await axios.post(`http://localhost:8070/student/${student._id}/gpa/add`, {
+        const response = await axios.post(`http://localhost:8070/student/${student._id}/gpa/add`, {
           semester: i + 1,
-          gpa: [gpaValue],
+          gpa: gpaValue,
         });
+        console.log(response.data); // Log the response data from the server
       }
       Swal.fire("GPA saved successfully!", "", "success");
       navigate("/");
     } catch (err) {
+      console.error(err); // Log the error for debugging
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -51,7 +53,7 @@ export default function GPA() {
     <div className="container p-5">
       <h2>GPA for {student.name}</h2>
       <form>
-        {Array.from({ length: student.semester }, (_, i) => i + 1).map((sem) => (
+        {Array.from({ length: student.semester || 0 }, (_, i) => i + 1).map((sem) => (
           <div key={sem} className="mb-3">
             <label htmlFor={`gpa-${sem}`} className="form-label">
               GPA for Semester {sem}
@@ -63,7 +65,7 @@ export default function GPA() {
               id={`gpa-${sem}`}
               placeholder="Enter GPA"
               defaultValue={
-                gpa.find((g) => g.semester === sem)?.gpa?.[0] || ""
+                gpa.find((g) => g.semester === sem)?.gpa || ""
               }
             />
           </div>
