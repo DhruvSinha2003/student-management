@@ -8,6 +8,7 @@ import Footer from "./Components/Footer";
 import NotFound from "./Components/NotFound";
 import GPA from "./Pages/GPA";
 import Statistics from "./Pages/Statistics";
+import Analysis from "./Pages/Analysis";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/get/:id" element={<ShowOne />} />
           <Route path="/student/gpa/:sid" element={<GPA />} />
           <Route path="/student/statistics/:sid" element={<Statistics />} />
+          <Route path="/student/analysis/:sid" element={<Analysis />} />
         </Routes>
       </Router>
 

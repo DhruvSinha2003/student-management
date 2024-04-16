@@ -35,7 +35,7 @@ export default function Statistics() {
     <div className="container p-5">
       <div className="row">
         <div className="col-md-6">
-          {student && savedGpa.length > 0 && (
+          {student && savedGpa.length > 0 ? (
             <div className="mt-5">
               <h2>GPA Statistics for {student.name}</h2>
               <table className="table">
@@ -55,6 +55,8 @@ export default function Statistics() {
                 </tbody>
               </table>
             </div>
+          ) : (
+            <h2>No GPA data available</h2>
           )}
 
           {/* Display loading spinner while fetching data */}

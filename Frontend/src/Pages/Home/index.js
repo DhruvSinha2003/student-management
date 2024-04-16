@@ -7,6 +7,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { BsTrash3, BsGraphUp } from "react-icons/bs";
 import NoStudent from "../../Components/NoStudent";
 import { ClipboardData } from "react-bootstrap-icons";
+import { MdOutlineAnalytics } from "react-icons/md";
 
 export default function Home() {
   const [students, setStudents] = useState([]);
@@ -89,24 +90,41 @@ export default function Home() {
                     <Link
                       to={`/get/${item._id}`}
                       className="btn btn-primary mr-2"
-                      style={{ marginRight: '5px' }}
+                      style={{ marginRight: "5px" }}
                     >
                       <FaRegEdit />
                     </Link>
                     <Link
                       to={`/student/gpa/${item._id}`}
                       className="btn btn-success mr-2"
-                      style={{ backgroundColor: "orange", marginRight: '5px' }}
+                      style={{ backgroundColor: "orange", marginRight: "5px" }}
                     >
-                      <ClipboardData style={{ color: "white" }} /> 
+                      <ClipboardData style={{ color: "white" }} />
                     </Link>
                     <Link
                       to={`/student/statistics/${item._id}`}
                       className="btn btn-success mr-2"
-                      style={{ marginRight: '5px' }}
+                      style={{ marginRight: "5px" }}
                     >
                       <BsGraphUp />
                     </Link>
+                    <Link
+                      to={`/student/analysis/${item._id}`}
+                      className="btn mr-2"
+                      style={{
+                        backgroundColor: "purple",
+                        color: "white",
+                        marginRight: "5px",
+                        display: "inline-block",
+                        border: "none",
+                        borderRadius: "4px",
+                        padding: "8px 14px",
+                        textDecoration: "none",
+                      }}
+                    >
+                      <MdOutlineAnalytics />
+                    </Link>
+
                     <button
                       type="button"
                       className="btn btn-danger"
