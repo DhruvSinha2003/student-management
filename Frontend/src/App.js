@@ -6,7 +6,7 @@ import Home from "./Pages/Home";
 import ShowOne from "./Components/ShowOne";
 import Footer from "./Components/Footer";
 import NotFound from "./Components/NotFound";
-import GPA from './Pages/GPA';
+import GPA from "./Pages/GPA";
 
 function App() {
   return (
