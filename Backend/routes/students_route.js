@@ -17,7 +17,6 @@ router.route('/add').post(async (req, res) => {
   }
 });
 
-
 // Get all students
 router.route('/get').get(async (req, res) => {
   try {
@@ -59,6 +58,28 @@ router.route('/update/:sid').put(async (req, res) => {
   } catch (err) {
     console.log(err.message);
     res.status(500).send({ status: 'Error with updating student', error: err.message });
+  }
+});
+
+// Update GPA for a student
+router.route('/:sid/gpa/update').put(async (req, res) => {
+  const studentId = req.params.sid;
+  const { gpa } = req.body;
+
+  try {
+    const student = await Student.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ status: 'Error', message: 'Student not found' });
+    }
+
+    // Update GPA array
+    student.gpa = gpa;
+    await student.save();
+
+    res.status(200).json({ message: 'GPA updated successfully' });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send({ status: 'Error with updating GPA', error: err.message });
   }
 });
 

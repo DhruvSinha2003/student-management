@@ -19,12 +19,8 @@ export default function GPA() {
         console.log("Student response:", response.data);
         setStudent(response.data.user);
 
-        console.log("Fetching GPA records for student:", sid);
-        const gpaResponse = await axios.get(
-          `http://localhost:8070/student/${sid}/gpa/get`
-        );
-        console.log("GPA response:", gpaResponse.data);
-        setGpa(gpaResponse.data.gpa || []);
+        // Fetch GPA records for the student from the student object
+        setGpa(response.data.user.gpa || []);
       } catch (err) {
         console.error("Error fetching student and GPA data:", err);
         Swal.fire({
@@ -37,84 +33,47 @@ export default function GPA() {
     fetchStudentAndGpa();
   }, [sid]);
 
-  // Add or update GPA for a student
-const saveGpa = async () => {
-  try {
-    const gpaValues = Array.from({ length: student.semestersCleared || 0 }, (_, i) => {
-      const gpaInput = document.getElementById(`gpa-${i + 1}`);
-      return parseFloat(gpaInput.value) || 0; // Use 0 if the input is empty
-    });
+  // Update GPA for a student
+  const saveGpa = async () => {
+    try {
+      // Extract GPA values from the form inputs
+      const gpaValues = Array.from(
+        { length: student.semestersCleared || 0 },
+        (_, i) => {
+          const gpaInput = document.getElementById(`gpa-${i + 1}`);
+          return parseFloat(gpaInput.value) || 0; // Use 0 if the input is empty
+        }
+      );
 
-    console.log("Extracted GPA values from form:", gpaValues);
+      console.log("Extracted GPA values from form:", gpaValues);
 
-    // Check if existing GPA record exists for each semester
-    let existingGpaToUpdate = null;
-    for (let i = 0; i < gpa.length; i++) {
-      if (gpa[i].semester === i + 1) {
-        existingGpaToUpdate = gpa[i]._id;
-        break;
-      }
-    }
+      // Update the GPA array in the student object
+      const updatedStudent = { ...student, gpa: gpaValues };
 
-    if (existingGpaToUpdate) {
-      // Update existing GPA record using PUT endpoint
-      console.log("Updating existing GPA record:", existingGpaToUpdate);
+      // Send a PUT request to update the student object
       const response = await axios.put(
-        `http://localhost:8070/student/${student._id}/gpa/${existingGpaToUpdate}/update`,
-        gpaValues
+        `http://localhost:8070/student/update/${sid}`,
+        updatedStudent
       );
 
-      // Check for successful update from the backend response (optional)
-      if (response.status === 200) {
-        console.log("GPA update response:", response.data);
-        Swal.fire("GPA updated successfully!", "", "success");
-        navigate("/");
-      } else {
-        console.error("Error updating GPA data on server:", response.data);
-        Swal.fire({
-          icon: "error",
-          title: "Update Failed",
-          text: "An error occurred on the server. Please check logs.",
-        });
-      }
-    } else {
-      // Add new semester with GPA data using POST endpoint
-      console.log("Adding new semester with GPA data:");
-      const response = await axios.post(
-        `http://localhost:8070/student/${student._id}/gpa/add`,
-        gpaValues
-      );
-
-      // Check for successful update from the backend response (optional)
-      if (response.status === 201) {
-        console.log("GPA update response:", response.data);
-        Swal.fire("GPA updated successfully!", "", "success");
-        navigate("/");
-      } else {
-        console.error("Error updating GPA data on server:", response.data);
-        Swal.fire({
-          icon: "error",
-          title: "Update Failed",
-          text: "An error occurred on the server. Please check logs.",
-        });
-      }
+      console.log("GPA update response:", response.data);
+      Swal.fire("GPA updated successfully!", "", "success");
+      navigate("/");
+    } catch (err) {
+      console.error("Error updating GPA data:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: err.message,
+      });
     }
-  } catch (err) {
-    console.error("Error updating GPA data:", err);
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: err.message,
-    });
-  }
-};
-
+  };
 
   return (
     <div className="container p-5">
-            <h2>GPA for {student.name}</h2>
+      <h2>GPA for {student.name}</h2>
       <form>
-        {Array.from({ length: student.semester || 0 }, (_, i) => i + 1).map(
+        {Array.from({ length: student.semestersCleared || 0 }, (_, i) => i + 1).map(
           (sem) => (
             <div key={sem} className="mb-3">
               <label htmlFor={`gpa-${sem}`} className="form-label">
@@ -125,10 +84,7 @@ const saveGpa = async () => {
                 step="0.01"
                 className="form-control"
                 id={`gpa-${sem}`}
-                placeholder="Enter GPA"
-                defaultValue={
-                  (gpa.find && gpa.find((g) => g.semester === sem)?.gpa) || ""
-                }
+                placeholder={(gpa && gpa[sem - 1]) ? gpa[sem - 1] : "Enter GPA"}
               />
               {/* Added console log to check extracted GPA values on form submit */}
               <input type="hidden" value={sem} id={`semester-${sem}`} />
@@ -149,4 +105,3 @@ const saveGpa = async () => {
     </div>
   );
 }
-

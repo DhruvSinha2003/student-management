@@ -86,6 +86,17 @@ const ShowOne = () => {
             <option value="Female">Female</option>
           </select>
         </div>
+        <div className="form-group">
+          <label htmlFor="semestersCleared">Semesters Cleared</label>
+          <input
+            type="number"
+            className="form-control"
+            id="semestersCleared"
+            name="semestersCleared"
+            value={user.semestersCleared}
+            onChange={handleInputChange}
+          />
+        </div>
         <br />
         <button onClick={handleFormSubmit} className="btn btn-primary">
           Submit
