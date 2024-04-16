@@ -8,7 +8,7 @@ export default function AddStudent() {
   const [name, setName] = useState("");
   const [nim, setNim] = useState("");
   const [gender, setGender] = useState("");
-  const [semester, setSemester] = useState(1);
+  const [semestersCleared, setSemestersCleared] = useState(1);
   const navigate = useNavigate();
 
   const sendData = (e) => {
@@ -17,7 +17,7 @@ export default function AddStudent() {
       name,
       nim: parseInt(nim),
       gender,
-      semester,
+      semestersCleared,
     };
 
     Swal.fire({
@@ -111,16 +111,16 @@ export default function AddStudent() {
           </div>
         </div>
         <div className="mb-3">
-          <label htmlFor="semester" className="form-label">
-            Current Semester
+          <label htmlFor="semestersCleared" className="form-label">
+            Number Semesters Cleared
           </label>
           <input
             type="number"
             className="form-control"
-            id="semester"
-            placeholder="Enter Your Current Semester"
-            value={semester}
-            onChange={(e) => setSemester(parseInt(e.target.value))}
+            id="semestersCleared"
+            placeholder="Enter the number of sememsters cleared"
+            value={semestersCleared}
+            onChange={(e) => setSemestersCleared(parseInt(e.target.value))}
           />
         </div>
         <br />

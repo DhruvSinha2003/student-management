@@ -14,15 +14,16 @@ const studentSchema = new Schema({
     type: String,
     required: true
   },
-  semester: {
+  semestersCleared: {
     type: Number,
     required: true
   },
   gpa: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'GPA'
+    type: Object, 
+    required: false 
   }
 });
+
 
 const Student = mongoose.model('Student', studentSchema);
 

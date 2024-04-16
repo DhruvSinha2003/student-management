@@ -37,76 +37,78 @@ export default function GPA() {
     fetchStudentAndGpa();
   }, [sid]);
 
-  const saveGpa = async () => {
-    try {
-      const gpaValues = Array.from({ length: student.semester || 0 }, (_, i) => {
-        const gpaInput = document.getElementById(`gpa-${i + 1}`);
-        return parseFloat(gpaInput.value) || 0; // Use 0 if the input is empty
-      });
+  // Add or update GPA for a student
+const saveGpa = async () => {
+  try {
+    const gpaValues = Array.from({ length: student.semestersCleared || 0 }, (_, i) => {
+      const gpaInput = document.getElementById(`gpa-${i + 1}`);
+      return parseFloat(gpaInput.value) || 0; // Use 0 if the input is empty
+    });
 
-      console.log("Extracted GPA values from form:", gpaValues);
+    console.log("Extracted GPA values from form:", gpaValues);
 
-      // Check if existing GPA record exists for each semester
-      let existingGpaToUpdate = null;
-      for (let i = 0; i < gpa.length; i++) {
-        if (gpa[i].semester === i + 1) {
-          existingGpaToUpdate = gpa[i]._id;
-          break;
-        }
+    // Check if existing GPA record exists for each semester
+    let existingGpaToUpdate = null;
+    for (let i = 0; i < gpa.length; i++) {
+      if (gpa[i].semester === i + 1) {
+        existingGpaToUpdate = gpa[i]._id;
+        break;
       }
-
-      if (existingGpaToUpdate) {
-        // Update existing GPA record using PUT endpoint
-        console.log("Updating existing GPA record:", existingGpaToUpdate);
-        const response = await axios.put(
-          `http://localhost:8070/student/<span class="math-inline">\{student\.\_id\}/gpa/</span>{existingGpaToUpdate}`,
-          gpaValues
-        );
-
-        // Check for successful update from the backend response (optional)
-        if (response.status === 200) {
-          console.log("GPA update response:", response.data);
-          Swal.fire("GPA updated successfully!", "", "success");
-          navigate("/");
-        } else {
-          console.error("Error updating GPA data on server:", response.data);
-          Swal.fire({
-            icon: "error",
-            title: "Update Failed",
-            text: "An error occurred on the server. Please check logs.",
-          });
-        }
-      } else {
-        // Add new semester with GPA data using POST endpoint
-        console.log("Adding new semester with GPA data:");
-        const response = await axios.post(
-          `http://localhost:8070/student/${student._id}/gpa/add`,
-          gpaValues
-        );
-
-        // Check for successful update from the backend response (optional)
-        if (response.status === 201) {
-          console.log("GPA update response:", response.data);
-          Swal.fire("GPA updated successfully!", "", "success");
-          navigate("/");
-        } else {
-          console.error("Error updating GPA data on server:", response.data);
-          Swal.fire({
-            icon: "error",
-            title: "Update Failed",
-            text: "An error occurred on the server. Please check logs.",
-          });
-        }
-      }
-    } catch (err) {
-      console.error("Error updating GPA data:", err);
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: err.message,
-      });
     }
-  };
+
+    if (existingGpaToUpdate) {
+      // Update existing GPA record using PUT endpoint
+      console.log("Updating existing GPA record:", existingGpaToUpdate);
+      const response = await axios.put(
+        `http://localhost:8070/student/${student._id}/gpa/${existingGpaToUpdate}/update`,
+        gpaValues
+      );
+
+      // Check for successful update from the backend response (optional)
+      if (response.status === 200) {
+        console.log("GPA update response:", response.data);
+        Swal.fire("GPA updated successfully!", "", "success");
+        navigate("/");
+      } else {
+        console.error("Error updating GPA data on server:", response.data);
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed",
+          text: "An error occurred on the server. Please check logs.",
+        });
+      }
+    } else {
+      // Add new semester with GPA data using POST endpoint
+      console.log("Adding new semester with GPA data:");
+      const response = await axios.post(
+        `http://localhost:8070/student/${student._id}/gpa/add`,
+        gpaValues
+      );
+
+      // Check for successful update from the backend response (optional)
+      if (response.status === 201) {
+        console.log("GPA update response:", response.data);
+        Swal.fire("GPA updated successfully!", "", "success");
+        navigate("/");
+      } else {
+        console.error("Error updating GPA data on server:", response.data);
+        Swal.fire({
+          icon: "error",
+          title: "Update Failed",
+          text: "An error occurred on the server. Please check logs.",
+        });
+      }
+    }
+  } catch (err) {
+    console.error("Error updating GPA data:", err);
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: err.message,
+    });
+  }
+};
+
 
   return (
     <div className="container p-5">

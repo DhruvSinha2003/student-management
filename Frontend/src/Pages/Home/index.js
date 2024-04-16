@@ -12,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     const getStudents = async () => {
       try {
-        const res = await axios.get("http://localhost:8070/student/get-all");
+        const res = await axios.get("http://localhost:8070/student/get");
         setStudents(res.data);
       } catch (err) {
         Swal.fire({
@@ -69,7 +69,7 @@ export default function Home() {
                 <th>Name</th>
                 <th>Number</th>
                 <th>Gender</th>
-                <th>Semester</th>
+                <th>Semesters Cleared</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -80,7 +80,7 @@ export default function Home() {
                   <td>{item.name}</td>
                   <td>{item.nim}</td>
                   <td>{item.gender}</td>
-                  <td>{item.semester}</td>
+                  <td>{item.semestersCleared}</td>
                   <td>
                     <Link to={`/get/${item._id}`} className="btn btn-primary mr-2">
                       <FaRegEdit />
