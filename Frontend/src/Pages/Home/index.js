@@ -1,4 +1,3 @@
-// Home.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -91,6 +90,7 @@ export default function Home() {
                       to={`/get/${item._id}`}
                       className="btn btn-primary mr-2"
                       style={{ marginRight: "5px" }}
+                      title="Edit"
                     >
                       <FaRegEdit />
                     </Link>
@@ -98,6 +98,7 @@ export default function Home() {
                       to={`/student/gpa/${item._id}`}
                       className="btn btn-success mr-2"
                       style={{ backgroundColor: "orange", marginRight: "5px" }}
+                      title="Add GPA"
                     >
                       <ClipboardData style={{ color: "white" }} />
                     </Link>
@@ -105,6 +106,7 @@ export default function Home() {
                       to={`/student/statistics/${item._id}`}
                       className="btn btn-success mr-2"
                       style={{ marginRight: "5px" }}
+                      title="Statistics"
                     >
                       <BsGraphUp />
                     </Link>
@@ -121,6 +123,7 @@ export default function Home() {
                         padding: "8px 14px",
                         textDecoration: "none",
                       }}
+                      title="Analysis"
                     >
                       <MdOutlineAnalytics />
                     </Link>
@@ -129,6 +132,7 @@ export default function Home() {
                       type="button"
                       className="btn btn-danger"
                       onClick={() => deleteUser(item._id)}
+                      title="Delete"
                     >
                       <BsTrash3 />
                     </button>

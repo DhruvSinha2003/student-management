@@ -14,7 +14,6 @@ function App() {
   return (
     <div>
       <Header />
-
       <Router>
         <Routes>
           <Route path="/" exact element={<Home />} />
@@ -26,7 +25,6 @@ function App() {
           <Route path="/student/analysis/:sid" element={<Analysis />} />
         </Routes>
       </Router>
-
       <Footer />
     </div>
   );

@@ -6,13 +6,14 @@ function Header() {
     <div>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
-          <a className="nav-link" href="/">
+          <a className="navbar-brand d-flex align-items-center" href="/">
             <img
-              className="img-fluid"
+              className="img-fluid me-2"
               src={logo}
-              alt="Logo STTISS"
+              alt="Logo MMCOE"
               style={{ width: "3rem" }}
             />
+            <span style={{ fontSize: "1.5rem", fontWeight: "normal" }}>Student Result Analysis</span>
           </a>
 
           <button
@@ -27,17 +28,12 @@ function Header() {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav">
-              <li className="nav-item">
+            <ul className="navbar-nav ms-auto">
+              {/* <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/">
                   Home
                 </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link active" href="/add-student">
-                  Create Student
-                </a>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
