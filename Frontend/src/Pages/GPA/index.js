@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function GPA() {
   const { sid } = useParams();
+  const navigate = useNavigate();
   const [student, setStudent] = useState({});
   const [gpa, setGpa] = useState([]);
-  const [savedGpa, setSavedGpa] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const fetchStudentAndGpa = async () => {
       try {
+        console.log("Fetching student by ID:", sid);
         const response = await axios.get(
           `http://localhost:8070/student/get/${sid}`
         );
+        console.log("Student response:", response.data);
         setStudent(response.data.user);
+
+        // Fetch GPA records for the student from the student object
         setGpa(response.data.user.gpa || []);
-        setIsLoading(false); // Update loading state when data is fetched
       } catch (err) {
         console.error("Error fetching student and GPA data:", err);
         Swal.fire({
@@ -31,18 +33,32 @@ export default function GPA() {
     fetchStudentAndGpa();
   }, [sid]);
 
-  const saveGpa = () => {
+  // Update GPA for a student
+  const saveGpa = async () => {
     try {
+      // Extract GPA values from the form inputs
       const gpaValues = Array.from(
         { length: student.semestersCleared || 0 },
         (_, i) => {
           const gpaInput = document.getElementById(`gpa-${i + 1}`);
-          return parseFloat(gpaInput.value) || 0;
+          return parseFloat(gpaInput.value) || 0; // Use 0 if the input is empty
         }
       );
 
-      setSavedGpa(gpaValues);
+      console.log("Extracted GPA values from form:", gpaValues);
+
+      // Update the GPA array in the student object
+      const updatedStudent = { ...student, gpa: gpaValues };
+
+      // Send a PUT request to update the student object
+      const response = await axios.put(
+        `http://localhost:8070/student/update/${sid}`,
+        updatedStudent
+      );
+
+      console.log("GPA update response:", response.data);
       Swal.fire("GPA updated successfully!", "", "success");
+      navigate("/");
     } catch (err) {
       console.error("Error updating GPA data:", err);
       Swal.fire({
@@ -57,23 +73,23 @@ export default function GPA() {
     <div className="container p-5">
       <h2>GPA for {student.name}</h2>
       <form>
-        {Array.from(
-          { length: student.semestersCleared || 0 },
-          (_, i) => i + 1
-        ).map((sem) => (
-          <div key={sem} className="mb-3">
-            <label htmlFor={`gpa-${sem}`} className="form-label">
-              GPA for Semester {sem}
-            </label>
-            <input
-              type="number"
-              step="0.01"
-              className="form-control"
-              id={`gpa-${sem}`}
-              placeholder={gpa && gpa[sem - 1] ? gpa[sem - 1] : "Enter GPA"}
-            />
-          </div>
-        ))}
+        {Array.from({ length: student.semestersCleared || 0 }, (_, i) => i + 1).map(
+          (sem) => (
+            <div key={sem} className="mb-3">
+              <label htmlFor={`gpa-${sem}`} className="form-label">
+                GPA for Semester {sem}
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                className="form-control"
+                id={`gpa-${sem}`}
+                placeholder={(gpa && gpa[sem - 1]) ? gpa[sem - 1] : "Enter GPA"}
+              />
+              <input type="hidden" value={sem} id={`semester-${sem}`} />
+            </div>
+          )
+        )}
         <button
           type="button"
           className="btn btn-primary"
@@ -85,38 +101,6 @@ export default function GPA() {
           Save GPA
         </button>
       </form>
-
-      {/* Display table if GPA data is saved */}
-      {savedGpa.length > 0 && (
-        <div className="mt-5">
-          <h3>Saved GPA Data</h3>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Semester</th>
-                <th>GPA</th>
-              </tr>
-            </thead>
-            <tbody>
-              {savedGpa.map((gpa, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{gpa}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Display loading spinner while fetching data */}
-      {isLoading && (
-        <div className="mt-5 text-center">
-          <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

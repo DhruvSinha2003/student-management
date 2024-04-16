@@ -1,3 +1,4 @@
+// Home.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -5,6 +6,7 @@ import { Link } from "react-router-dom";
 import { FaRegEdit } from "react-icons/fa";
 import { BsTrash3, BsGraphUp } from "react-icons/bs";
 import NoStudent from "../../Components/NoStudent";
+import { ClipboardData } from "react-bootstrap-icons";
 
 export default function Home() {
   const [students, setStudents] = useState([]);
@@ -40,7 +42,9 @@ export default function Home() {
           .delete(`http://localhost:8070/student/delete/${id}`)
           .then((res) => {
             Swal.fire("Deleted!", res.data.status, "success");
-            const updatedStudents = students.filter((student) => student._id !== id);
+            const updatedStudents = students.filter(
+              (student) => student._id !== id
+            );
             setStudents(updatedStudents);
           })
           .catch((err) => {
@@ -82,10 +86,25 @@ export default function Home() {
                   <td>{item.gender}</td>
                   <td>{item.semestersCleared}</td>
                   <td>
-                    <Link to={`/get/${item._id}`} className="btn btn-primary mr-2">
+                    <Link
+                      to={`/get/${item._id}`}
+                      className="btn btn-primary mr-2"
+                      style={{ marginRight: '5px' }}
+                    >
                       <FaRegEdit />
                     </Link>
-                    <Link to={`/student/gpa/${item._id}`} className="btn btn-success mr-2">
+                    <Link
+                      to={`/student/gpa/${item._id}`}
+                      className="btn btn-success mr-2"
+                      style={{ backgroundColor: "orange", marginRight: '5px' }}
+                    >
+                      <ClipboardData style={{ color: "white" }} /> 
+                    </Link>
+                    <Link
+                      to={`/student/statistics/${item._id}`}
+                      className="btn btn-success mr-2"
+                      style={{ marginRight: '5px' }}
+                    >
                       <BsGraphUp />
                     </Link>
                     <button

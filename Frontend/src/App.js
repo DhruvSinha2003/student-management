@@ -7,6 +7,7 @@ import ShowOne from "./Components/ShowOne";
 import Footer from "./Components/Footer";
 import NotFound from "./Components/NotFound";
 import GPA from "./Pages/GPA";
+import Statistics from "./Pages/Statistics";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/add-student" element={<AddStudent />} />
           <Route path="/get/:id" element={<ShowOne />} />
           <Route path="/student/gpa/:sid" element={<GPA />} />
+          <Route path="/student/statistics/:sid" element={<Statistics />} />
         </Routes>
       </Router>
 
